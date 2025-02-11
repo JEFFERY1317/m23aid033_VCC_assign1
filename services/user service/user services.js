@@ -3,7 +3,6 @@ const mysql = require('mysql2');
 const app = express();
 app.use(express.json());
 
-// Database connection
 const db = mysql.createConnection({
     host: '192.168.233.133',
     user: 'fitness_user',
@@ -11,7 +10,6 @@ const db = mysql.createConnection({
     database: 'fitness_tracker'
 });
 
-// Test database connection
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to database:', err);
@@ -20,7 +18,7 @@ db.connect((err) => {
     console.log('Connected to database successfully');
 });
 
-// Get all user profiles
+
 app.get('/api/profiles', (req, res) => {
     db.query('SELECT * FROM users', (err, results) => {
         if (err) {
@@ -31,7 +29,6 @@ app.get('/api/profiles', (req, res) => {
     });
 });
 
-// Create new user profile
 app.post('/api/profiles', (req, res) => {
     const { name, age, weight, height } = req.body;
     
@@ -53,7 +50,6 @@ app.post('/api/profiles', (req, res) => {
     });
 });
 
-// New endpoint for complete user data
 app.get('/api/profiles/:id/complete', (req, res) => {
     const userId = req.params.id;
     
@@ -78,7 +74,6 @@ app.get('/api/profiles/:id/complete', (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Format the response
         const userData = {
             id: results[0].id,
             name: results[0].name,
@@ -88,7 +83,6 @@ app.get('/api/profiles/:id/complete', (req, res) => {
             exercises: [],
             progress: []
         };
-// Add exercises and progress
 results.forEach(row => {
     if (row.exercise_type) {
         userData.exercises.push({
